@@ -1,0 +1,35 @@
+
+<div class="row">
+	<div class="col-md-6">
+		<h5><b><i class="fa fa-transgender fa-fw"></i></b> {{USER gender_text}}</h5> 
+		<?php if (!empty($pt->profile_user->country_name)) { ?>
+			<h5><b><i class="fa fa-globe fa-fw"></i></b> {{USER country_name}}</h5>
+			<?php if (!empty($pt->custom_fields)): ?>
+				<div>
+					<hr>
+					<h5><i class="fa fa-info fa-fw"></i> {{LANG more_info}}</h5>
+					{{CUSTOM_FIELDS}}
+				</div>
+			<?php endif ?>
+			
+		<?php } ?> 
+		<?php if (!empty($pt->profile_user->facebook) || !empty($pt->profile_user->google) || !empty($pt->profile_user->twitter)) { ?>
+		<hr>
+
+		
+		<h4>Social Links</h4>
+		<div class="share-video">
+			<?php if (!empty($pt->profile_user->facebook)) { ?><a href="{{USER facebook}}" onclick="location.href='{{USER facebook}}'" class="fa fa-facebook"></a><?php } ?>
+			<?php if (!empty($pt->profile_user->google)) { ?><a href="{{USER google}}" onclick="location.href='{{USER google}}' " class="fa fa-google"></a><?php } ?>
+			<?php if (!empty($pt->profile_user->twitter)) { ?><a href="{{USER twitter}}" onclick="location.href='{{USER twitter}}' "class="fa fa-twitter"></a><?php } ?>
+		</div>
+		<?php } ?>
+
+			
+		
+	</div>
+	<div class="col-md-6">
+		<?php if (!empty($pt->profile_user->about)) { ?><h4>{{LANG about_profile}}</h4> {{USER about}}<?php } ?>
+
+	</div>
+</div>

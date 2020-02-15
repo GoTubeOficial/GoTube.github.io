@@ -1,0 +1,108 @@
+<div class="settings-header monetization-settings-header">
+    <h3>
+        <i class="material-icons">account_balance</i> {{LANG monetization_settings}}
+        <span class="pull-right">
+            <a href="{{LINK settings/withdrawals/{{ME username}}}}"> 
+                <i class="material-icons">history</i> {{LANG withdrawals}}
+            </a>
+        </span>
+    </h3>
+    <div class="clear"></div>
+</div>
+
+<div class="user-setting-panel">
+<form id="toggle-video-monetization-form" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2" for="monetization">{{LANG monetization}}</label>
+        <div class="col-md-6">
+            <input type="checkbox" <?php echo ($pt->settings->video_mon == '1') ? 'checked': '';?> data-toggle="toggle" data-onstyle="success" data-on="{{LANG enabled}}" data-off="{{LANG disabled}}" id="toggle-video-monetization">
+        </div>
+    </div>
+    <div class="clear"></div>
+</form>
+<hr>
+<div class="alert alert-info">
+     {{LANG earn_mon}}
+ </div>
+<form class="form-horizontal user-monetization-panel" id="monetization-settings" method="POST">
+    <div class="monetization-settings-alert">
+        
+    </div>
+    <fieldset>
+        
+        <div class="form-group">
+            <label class="col-md-2">{{LANG balance}}</label>
+            <div class="col-md-6">
+                <input type="text" readonly="true" class="form-control input-md" value="{{ME balance}}">
+            </div>
+            <div class="col-md-1 no-padding-left">
+                <input type="text" value="{{CONFIG payment_currency}}" readonly="true" class="form-control read-only">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2">PayPal E-mail</label>
+            <div class="col-md-6">
+                <input type="email" class="form-control input-md" value="{{ME email}}" name="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2">{{LANG amount}}</label>
+            <div class="col-md-6">
+                <input type="number" class="form-control input-md" placeholder="0.00" name="amount">
+            </div>
+            <div class="col-md-3 no-padding-left">
+                <input type="text" value="{{LANG min}} 50: {{CONFIG payment_currency}}" readonly="true" class="form-control read-only">
+            </div>
+        </div>
+        <input type="hidden" name="hash_id" value="<?php echo PT_CreateSession()?>">
+        <input type="hidden" name="user_id" value="{{USER id}}">
+        <div class="form-group">
+            <label class="col-md-2" for="button1id"></label>
+            <div class="col-md-8">
+                <button id="submit" class="btn btn-main" type="submit">
+                    <i class="material-icons">present_to_all</i> {{LANG submit_withdrawal_request}}
+                </button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</div>
+
+<script>
+
+    jQuery(document).ready(function($) {
+        $("#withdrawal-requests").DataTable();
+
+        $("#toggle-video-monetization").change(function(event) {
+            let hash_id = $('.main_session').val();
+            let url     = "{{LINK aj/user/video-monetization}}?hash=" + hash_id;
+            $.post(url,{user_id:'<?php echo($pt->settings->id);?>'}, function(data, textStatus, xhr) { /* pass */});
+        });
+
+        var form = $('form#monetization-settings');
+        form.ajaxForm({
+            url: '{{LINK aj/user/request-withdrawal}}?hash=' + $('.main_session').val(),
+            dataType:'json',
+            beforeSend: function() {
+                form.find('button').text("{{LANG please_wait}}");
+            },
+            success: function(data) {
+                scrollToTop();
+                if (data.status == 200) {
+                    $('.monetization-settings-alert').html('<div class="alert alert-success bg-success">' + data.message + '</div>');
+                    $('.alert-success').fadeIn('fast', function() {
+                        $(this).delay(2500).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    });
+                } 
+                else if (data.status == 400) {
+                    $('.monetization-settings-alert').html('<div class="alert alert-danger bg-danger">' + data.message + '</div>');
+                    $('.alert-danger').fadeIn(300);
+                }
+                form.find('button').text("{{LANG submit_withdrawal_request}}");
+            }
+        });
+    });
+
+</script>

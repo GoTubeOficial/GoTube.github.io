@@ -1,0 +1,121 @@
+<div class="content">
+   <div class="col-md-12">
+      <div class="upload-head">
+         <h4>{{LANG edit_video}}: {{TITLE}}</h4>
+         <hr>
+      </div>
+      <div id="video-success" class="alert alert-success"></div>
+      <div class="errors alert alert-danger"></div>
+      <div class="col-md-8 no-padding-right" id="edit-form">
+         <form action="" class="form-horizontal setting-panel" method="POST">
+            <fieldset>
+               <div class="form-group">
+                  <label class="col-md-3" for="title">{{LANG video_title}}</label>  
+                  <div class="col-md-8">
+                     <input id="title" name="title" type="text" value="{{TITLE}}" class="form-control input-md">
+                     <span class="help-block">{{LANG video_title_help}}</span>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="description">{{LANG video_descritpion}}</label>  
+                  <div class="col-md-8">
+                     <textarea name="description" id="description" cols="30" rows="10" class="form-control">{{DESC}}</textarea>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="category_id">{{LANG category}}</label>  
+                  <div class="col-md-8">
+                     <select name="category_id" id="category_id" class="form-control">
+                        <?php foreach($pt->categories as $key => $category) { $selected = ($pt->video->category_id == $key) ? 'selected' : '';?>
+                        <option value="<?php echo $key?>" <?php echo $selected?>><?php echo $category?></option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+               <?php if (PT_IsAdmin()) { ?>
+               <div class="form-group">
+                  <label class="col-md-3" for="featured">{{LANG featured}}</label>  
+                  <div class="col-md-8">
+                     <select name="featured" id="featured" class="form-control">
+                        <option value="0" <?php echo ($pt->video->featured == 0) ? 'selected' : '' ?>>No</option>
+                        <option value="1" <?php echo ($pt->video->featured == 1) ? 'selected' : '' ?>>Yes</option>
+                     </select>
+                  </div>
+               </div>
+               <?php } ?>
+               <div class="form-group">
+                  <label class="col-md-3" for="tags">{{LANG tags}}</label>  
+                  <div class="col-md-8">
+                     <input id="mySingleFieldTags" name="tags" type="text" value="{{TAGS}}" placeholder="" class="form-control input-md">
+                     <span class="help-block">{{LANG tags_help}}</span>
+                  </div>
+               </div>
+               <div class="form-group hidden">
+                  <label class="col-md-3" for="thumbnail">{{LANG thumbnail}}</label>  
+                  <div class="col-md-8">
+                     <input id="thumbnail" name="thumbnail" type="file" accept="image/*">
+                     <span class="help-block">jpg, png, gif</span>
+                  </div>
+               </div>
+               <div class="form-group ">
+                  <label class="col-md-3" for="submit"></label>  
+                  <div class="col-md-8">
+                     <input type="submit" id="submit-btn" class="btn btn-main" value="{{LANG publish}}">
+                     <input type="button" class="btn btn-delete" value="Delete video" onclick="PT_DeleteVideo({{ID}}, 'edit-page')">
+                  </div>
+               </div>
+               <input type="hidden" name="video-id" class="video-id" value="{{ID}}">
+            </fieldset>
+         </form>
+      </div>
+      <div class="col-md-4 no-padding-left">
+           <div class="thumbnail-preview edit-thumb">
+              <img src="{{THUMBNAIL}}" alt="{{TITLE}}">
+           </div>
+           <div class="video-title">
+              <p>{{TITLE}}</p>
+           </div>
+           <div class="video-description">
+              <p>{{DESC_2}}</p>
+           </div>
+      </div>
+      <div class="clear"></div>
+   </div>
+   <div class="clear"></div>
+</div>
+<script>
+$(function () {
+	$('.edit-thumb').on('click', function(event) {
+		$('#thumbnail').trigger('click');
+	});
+	$('#thumbnail').on('change', function(event) {
+		readURL(this);
+	});
+	$('#description').keyup(function(event) {
+      str = $(this).val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+      $('.video-description p').html(str);
+   });
+   $('#title').keyup(function(event) {
+      $('.video-title p').html($(this).val());
+   });
+	$("#mySingleFieldTags").tagit();
+	$('#edit-form form').ajaxForm({
+	    url: '{{LINK aj/edit-video}}' + '?hash=' + $('.main_session').val(),
+	    beforeSend: function() {
+	    	$('#submit-btn').attr('disabled', true);
+	    	$('#submit-btn').val("{{LANG please_wait}}");
+	    },
+	    success: function(data) {
+	    	if (data.status == 200) {
+	    		$('#video-success').html(data.message);
+          window.location.href = '{{URL}}';
+	    	} else {
+	    		$('#submit-btn').attr('disabled', false);
+	    	    $('#submit-btn').val('{{LANG publish}}');
+	    		$('.errors').removeClass('hidden').html(data.message);
+	    	}
+	    }
+	});
+});
+
+</script>

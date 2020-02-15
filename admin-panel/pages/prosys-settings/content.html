@@ -1,0 +1,108 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Pro System > Settings</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8 ">
+            <div class="card">
+                <div class="header">
+                    <h2 class="pull-left">Pro System Settings</h2>
+                    <button class="btn btn-danger pull-right" onclick="PT_RemoveSubscriptions('expired',this);">Cancel Expired Subscriptions</button>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="body">
+                    <div class="alert alert-success prosys-settings-alert"></div>
+                    <form class="prosys-settings" method="POST">
+                        <label for="go_pro">Pro system</label>
+                        <div class="form-group">
+                            <input type="radio" name="go_pro" id="go_pro-enabled" value="on" <?php echo ($pt->config->go_pro == 'on') ? 'checked': '';?>>
+                            <label for="go_pro-enabled">Enabled</label>
+                            <input type="radio" name="go_pro" id="go_pro-disabled" value="off" <?php echo ($pt->config->go_pro == 'off') ? 'checked': '';?>>
+                            <label for="go_pro-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <label for="upload">Free users upload limit</label>
+                            <select class="form-control show-tick" id="upload" name="user_max_upload" tabindex="-98">
+                                <option value="2000000" <?php if($pt->config->user_max_upload == '2000000'){ echo "selected";} ?>>2MB</option>
+                                <option value="6000000" <?php if($pt->config->user_max_upload == '6000000'){ echo "selected";} ?>>6MB</option>
+                                <option value="12000000" <?php if($pt->config->user_max_upload == '12000000'){ echo "selected";} ?>>12MB</option>
+                                <option value="24000000" <?php if($pt->config->user_max_upload == '24000000'){ echo "selected";} ?>>24MB</option>
+                                <option value="48000000" <?php if($pt->config->user_max_upload == '48000000'){ echo "selected";} ?>>48MB</option>
+                                <option value="96000000" <?php if($pt->config->user_max_upload == '96000000'){ echo "selected";} ?>>96MB</option>
+                                <option value="256000000" <?php if($pt->config->user_max_upload == '256000000'){ echo "selected";} ?>>256MB</option>
+                                <option value="512000000" <?php if($pt->config->user_max_upload == '512000000'){ echo "selected";} ?>>512MB</option>
+                                <option value="1000000000" <?php if($pt->config->user_max_upload == '1000000000'){ echo "selected";} ?>>1GB</option>
+                                <option value="10000000000" <?php if($pt->config->user_max_upload == '10000000000'){ echo "selected";} ?>>10GB</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="number" id="user_max_import" name="user_max_import" class="form-control" value="{{CONFIG user_max_import}}">
+                                <label class="form-label">Free users import limit</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="number" id="pro_pkg_price" name="pro_pkg_price" class="form-control" value="{{CONFIG pro_pkg_price}}">
+                                <label class="form-label">Pro Package Price</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <!-- #END# Vertical Layout -->
+<script>
+
+
+function PT_RemoveSubscriptions(type,self){
+    if (!type || type != 'expired' || !self){
+        return false;
+    }
+
+    else if(type == 'expired'){
+        $(self).text("{{LANG please_wait}}").attr('disabled', 'true');
+        $.ajax({
+            url: '{{LINK aj/go_pro/remove_expired}}',
+            type: 'GET',
+            dataType: 'json'
+        })
+        .done(function() {
+            $('.payment-settings-alert').html('<i class="fa fa-check"></i> Expired Subscriptions was deleted successfully!');
+            setTimeout(function () {
+                $('.payment-settings-alert').empty();
+            }, 2000);
+            $(self).text('Cancel Expired Subscriptions').removeAttr('disabled');
+        })
+        .fail(function() {
+            console.log("error");
+        })
+    }
+}
+
+$(function() {
+    var form_prosys_settings = $('form.prosys-settings');
+
+    form_prosys_settings.ajaxForm({
+        url: '{{LINK aj/ap/save-settings}}',
+        beforeSend: function() {
+            form_prosys_settings.find('button[type="submit"]').text("{{LANG please_wait}}");
+        },
+        success: function(data) {
+            if (data.status == 200) {
+            	form_prosys_settings.find('button[type="submit"]').text('Save');
+            	$('.prosys-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+            	setTimeout(function () {
+            		$('.prosys-settings-alert').empty();
+            	}, 2000);
+            }
+        }
+    });
+});
+</script>

@@ -1,0 +1,13 @@
+<tr id="list-{{ID}}" data-id="{{ID}}">
+  <td><input type="checkbox" id="check-video-{{ID}}" class="delete-checkbox filled-in"><label for="check-video-{{ID}}"></label></td>
+  <td>{{ID}}</td>
+  <td><a href="{{URL}}" target="_blank"> {{VIDEO_ID}}</a></td>
+  <td>{{TITLE}}</td>
+  <td>{{CATEGORY}}</td>
+  <td>{{SOURCE}}</td>
+  <td><a href="{{USER url}}"><img src="{{USER avatar}}" class="td-avatar" alt="user avatar"> {{USER name}}</a></td>
+  <td>
+  	<a class="btn bg-cyan waves-effect waves-light" href="{{LINK edit-video/{{ID}}}}" target="_blank">EDIT</a>
+  	<button class="btn btn-danger waves-effect waves-light delete-content" data-id="{{ID}}">DELETE</button>
+  </td>
+</tr>

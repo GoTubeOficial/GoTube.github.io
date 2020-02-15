@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html id="html">
+<head>
+	<meta charset="UTF-8">
+	<title>{{CONTAINER_TITLE}}</title>
+	<meta name="title" content="{{CONTAINER_TITLE}}">
+	<meta name="description" content="{{CONTAINER_DESC}}">
+	<meta name="keywords" content="{{CONTAINER_KEYWORDS}}">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta property="fb:app_id" content="1643990952546825" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    {{OG_METATAGS}}
+    <link rel="shortcut icon" type="image/png" href="{{CONFIG theme_url}}/img/icon.png"/>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/jquery.tagit.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/twemoji-awesome.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/js/lib/sweetalert2/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/js/lib/notifIt/notifIt/css/notifIt.min.css">
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/style.css" id="style-css">
+    <?php if ($pt->mode == 'night' || $pt->config->night_mode == 'night'): ?>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/night-mode.css" class="night-mode-css">      
+    <?php endif; ?>  
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/css/custom.style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Laila" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <script src="{{CONFIG theme_url}}/js/jquery-3.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{CONFIG theme_url}}/js/jquery.form.min.js"></script>
+    <script type="text/javascript" src="{{CONFIG theme_url}}/js/tag-it.min.js"></script>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/player/css/mediaelementplayer.min.css" />
+    <script src="{{CONFIG theme_url}}/player/js/mediaelement-and-player.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/sweetalert2/dist/sweetalert2.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/notifIt/notifIt/js/notifIt.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <?php if ($pt->page == 'user_ads' || $pt->page == 'settings') { ?>
+    <link href="{{CONFIG theme_url}}/js/lib/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/lib/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <?php } ?>    
+    <?php if ($pt->page == 'watch' || $pt->page == 'home') { ?>
+    <script src="{{CONFIG theme_url}}/player/plugins/speed/speed.min.js"></script>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/player/plugins/speed/speed.min.css" />
+    <script src="{{CONFIG theme_url}}/player/plugins/speed/speed-i18n.js"></script>
+    <script src="{{CONFIG theme_url}}/player/plugins/jump/jump-forward.min.js"></script>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/player/plugins/jump/jump-forward.min.css" />
+    <script src="{{CONFIG theme_url}}/player/plugins/ads/ads.min.js"></script>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/player/plugins/ads/ads.min.css" />
+    <script src="{{CONFIG theme_url}}/player/plugins/ads/ads-i18n.js"></script>
+    <script src="{{CONFIG theme_url}}/player/plugins/vast/ads-vast-vpaid.min.js"></script>
+    <script src="{{CONFIG theme_url}}/player/plugins/vast/ads-vast-vpaid.js"></script>
+    <script src="{{CONFIG theme_url}}/player/plugins/quality/quality.min.js"></script>
+    <link rel="stylesheet" href="{{CONFIG theme_url}}/player/plugins/quality/quality.min.css" />
+    <?php } ?>
+    <?php if ($pt->page == 'login' && $pt->config->recaptcha == 'on') { ?>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <?php } ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <?php if (!empty($pt->config->google)) { ?>
+     <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', '{{CONFIG google}}', 'auto');
+      ga('send', 'pageview');
+    </script> 
+    <?php } ?>
+    <script>
+        <?php if (IS_LOGGED == true && $pt->config->server == 'nodejs') {?>
+           const socket = io('{{CONFIG hostname}}:{{CONFIG server_port}}');
+           socket.on('connect_error', function (error) {
+              console.log(error);
+           });
+           setTimeout(function () {
+             getNotifications();
+           }, 500);
+           function getNotifications() {
+               socket.emit('get notifications and messages');
+               setTimeout(function () {
+                 getNotifications();
+               }, 500);
+           }
+           socket.on('get notifications results', function (data) {
+              if (data.status == 200) {
+                 if (data.messages > 0) {
+                    var default_messages = $('body').attr('data-messages');
+
+                    if (!default_messages) {
+                       $('body').attr('data-messages', data.messages);
+                    }
+
+                    var default_messages = $('body').attr('data-messages');
+
+                    if (default_messages != data.messages) {
+                       $('#message-sound')[0].play();
+                       
+                    }
+
+                    $('body').attr('data-messages', data.messages);
+                    $('#new-messages').html('<b>' + data.messages + '</b>');
+                 } else {
+                    $('#new-messages').html("");
+                 }
+                 if (data.notifications > 0) {
+                    $('#new-notifications').html('<b>' + data.notifications + '</b>');
+                 } else {
+                     $('#new-notifications').html('');
+                 }
+                
+              }
+           });
+        <?php } ?>
+        var site_url = '{{CONFIG site_url}}';
+        function PT_Ajax_Requests_File() {
+          return site_url + '/';
+        }
+        function OpenShareWindow(url, windowName) {
+           newwindow = window.open(url, windowName, 'height=600,width=800');
+           if (window.focus) {
+              newwindow.focus();
+           }
+           return false;
+        }
+    </script>
+    <script src="{{CONFIG theme_url}}/js/header.js"></script>
+</head>
+<body itemscope itemtype="http://schema.org/Organization" id="pt-body">
+  <input type="hidden" class="main_session" value="<?php echo PT_CreateMainSession();?>">
+	<header>
+		{{HEADER_LAYOUT}}
+    <div class="clear"></div>
+	</header>
+	<div id="main-container" class="<?php echo ($pt->page != 'login') ? 'container' : 'welcome-page';?> <?php echo ($pt->page == 'watch') ? 'watch-container' : '';?> main-content" {{IS_LOGGED}}>
+        <div class="ads-placment">{{HEADER_AD}}</div>
+        <div class="announcement-renderer">
+            {{ANNOUNCEMENT}}
+        </div>
+		{{CONTAINER_CONTENT}}
+        <input type="hidden" id="main-url" value="{{MAIN_URL}}">
+        <div class="ads-placment">{{FOOTER_AD}}</div>
+	</div>
+    <?php if ($pt->config->night_mode == 'both'): ?>
+    <div class="toggle-mode hidden-xs">
+        <span class="fluid">
+            <i class="fa fa-moon-o" aria-hidden="true"></i>
+        </span>
+        <span class="fluid mode">
+            {{LANG mode}}
+        </span>
+        <span class="fluid">
+            <label class="switch">
+              <input type="checkbox" {{MODE}} id="toggle-mode">
+              <span class="slider round"></span>
+            </label>
+        </span>
+    </div>
+    <?php endif; ?> 
+	<footer class="<?php echo ($pt->page == 'messages') ? 'hide-in-mobile' : '';?>">
+		{{FOOTER_LAYOUT}}
+	</footer>
+	<!-- JS FILES -->
+    <?php if ($pt->page == 'watch') {?>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.10&appId=1755264744788554";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <?php } ?>
+    {{EXTRA_JS}}
+	<script type="text/javascript" src="{{CONFIG theme_url}}/js/script.js"></script>
+    <script type="text/javascript" src="{{CONFIG theme_url}}/js/bootstrap.min.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="{{CONFIG theme_url}}/js/footer.js"></script>
+    <link rel="" ="">
+    <script>
+    $(document).ready(function(){
+        $('.share-video a').click(function (e) {
+            e.preventDefault();
+        });
+        $('.dropdown-toggle').dropdown()
+
+        $("#toggle-mode").change(function(event) {
+            var mode = 'day';
+
+            if ($(this).prop( "checked" ) === true) {
+              mode = 'night';
+              $('<link>',{
+                rel:'stylesheet',
+                href:'{{CONFIG theme_url}}/css/night-mode.css',
+                class:'night-mode-css'
+              }).insertAfter('link#style-css');
+              $('.logo-img img').attr('src', '{{CONFIG theme_url}}/img/logo-light.png');
+            }
+            else{
+              $(".night-mode-css").remove();
+              $('.logo-img img').attr('src', '{{CONFIG theme_url}}/img/logo.png');
+            }
+
+
+            $.post('{{LINK }}', {mode: mode}, function(data, textStatus, xhr) { /* pass */ });
+        });
+
+        $("li.toggle-mobile-mode").click(function(event) {
+            var mode = $(this).attr('data-mode');
+
+            $.post('{{LINK }}', {mode: mode}, function(data, textStatus, xhr) {
+              location.reload();
+            });
+        });
+    });
+   </script>
+   <?php if (IS_LOGGED == true) { ?>
+   <audio id="message-sound" class="sound-controls" preload="auto">
+     <source src="{{CONFIG theme_url}}/mp3/unconvinced.mp3" type="audio/mpeg">
+     <source src="{{CONFIG theme_url}}/mp3/unconvinced.ogg" type="audio/ogg">
+   </audio>
+   <?php } ?> 
+</body>
+</html>

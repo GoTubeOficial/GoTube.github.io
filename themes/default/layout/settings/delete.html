@@ -1,0 +1,56 @@
+<div class="settings-header">
+    <h3><i class="fa fa-trash fa-fw "></i> {{LANG delete_account}}</h3>
+</div>
+<form class="form-horizontal user-setting-panel " id="delete-settings" method="POST">
+    <div class="setting-delete-alert"></div>
+    <fieldset>
+        <!-- password input-->
+        <div class="form-group">
+            <label class="col-md-3" for="current_password">{{LANG current_password}}</label>
+            <div class="col-md-6">
+                <input id="current_password" name="current_password" type="password" placeholder="" class="form-control input-md">
+            </div>
+        </div>
+        <hr>
+        <input type="hidden" name="hash_id" value="<?php echo PT_CreateSession()?>">
+        <input type="hidden" name="user_id" value="{{USER id}}">
+        <!-- Button (Double) -->
+        <div class="form-group">
+            <label class="col-md-2" for="button1id"></label>
+            <div class="col-md-8">
+                <button id="submit" name="submit" class="btn btn-main"><i class="fa fa-floppy-o progress-icon" data-icon="floppy-o"></i> {{LANG save}}</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function() {
+        var form = $('form#delete-settings');
+        form.ajaxForm({
+            url: '{{LINK aj/user/delete}}?hash=' + $('.main_session').val(),
+            beforeSend: function() {
+                form.find('button').text("{{LANG please_wait}}");
+                // FL_progressIconLoader(form.find('button'));
+            },
+            success: function(data) {
+                scrollToTop();
+                if (data.status == 200) {
+                    $('.setting-delete-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+                    $('.alert-success').fadeIn('fast', function() {
+                        $(this).delay(2500).slideUp(500, function() {
+                            $(this).remove();
+                        });
+                    });
+                    window.location.href = data.url;
+                } else if (data.errors) {
+                    var errors = data.errors.join("<br>");
+                    $('.setting-delete-alert').html('<div class="alert alert-danger">' + errors + '</div>');
+                    $('.alert-danger').fadeIn(300);
+                }
+                form.find('button').html('<i class="fa fa-floppy-o progress-icon" data-icon="floppy-o"></i> {{LANG save}}');
+                // FL_progressIconLoader(form.find('button'));
+            }
+        });
+    });
+</script>

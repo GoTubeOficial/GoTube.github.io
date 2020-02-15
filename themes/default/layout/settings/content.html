@@ -1,0 +1,43 @@
+<div class="page-margin">
+   <div class="row">
+      <div class="col-md-3">
+        <div class="settings-sidebar">
+        	<ul class="list-group">
+    			  <li class="list-group-item <?php echo ($pt->setting_page == 'general') ? 'active': '';?>">
+              <a href="{{LINK settings/general/<?php echo $pt->settings->username; ?>}}">{{LANG general}}</a>
+            </li>
+
+    			  <li class="list-group-item <?php echo ($pt->setting_page == 'profile') ? 'active': '';?>">
+              <a href="{{LINK settings/profile/<?php echo $pt->settings->username; ?>}}">{{LANG profile}}</a>
+            </li>
+            <?php if ($pt->config->usr_v_mon == 'on' && ($pt->settings->id == $pt->user->id)): ?>
+              <li class="list-group-item <?php echo (in_array($pt->setting_page, array('withdrawals','monetization'))) ? 'active': '';?>">
+                <a href="{{LINK settings/monetization/<?php echo $pt->settings->username; ?>}}">{{LANG monetization}}</a>
+              </li>
+            <?php endif; ?>
+            <li class="list-group-item <?php echo ($pt->setting_page == 'password') ? 'active': '';?>">
+              <a href="{{LINK settings/password/<?php echo $pt->settings->username; ?>}}">{{LANG password}}</a>
+            </li>
+            <li class="list-group-item <?php echo ($pt->setting_page == 'avatar') ? 'active': '';?>">
+              <a href="{{LINK settings/avatar/<?php echo $pt->settings->username; ?>}}">{{LANG avatar_and_cover}}</a>
+            </li>
+            <?php if (1): ?>  
+              <li class="list-group-item <?php echo ($pt->setting_page == 'verification') ? 'active': '';?>">
+                <a href="{{LINK settings/verification/<?php echo $pt->settings->username; ?>}}">{{LANG verification}}</a>
+              </li>
+            <?php endif ?>
+            <?php if ($pt->config->delete_account == 'on') { ?>
+            <li class="list-group-item <?php echo ($pt->setting_page == 'delete') ? 'active': '';?>">
+              <a href="{{LINK settings/delete/<?php echo $pt->settings->username; ?>}}">{{LANG delete_account}}</a>
+            </li>
+            <?php } ?>
+    			</ul>
+        </div>
+      </div>
+      <div class="col-md-9 no-padding-left">
+        {{SETTINGSPAGE}}
+      </div>
+      <div class="clear"></div>
+   </div>
+</div>
+<br>

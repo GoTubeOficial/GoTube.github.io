@@ -1,0 +1,31 @@
+<div class="settings-header withdrawals-settings-header">
+    <h3>
+        <i class="fa fa-paypal fa-fw "></i> {{LANG withdrawals_history}}  
+        <span class="pull-right">
+            <a href="{{LINK settings/monetization/<?php echo $pt->settings->username; ?>}}">
+                <i class="material-icons">arrow_back</i> {{LANG monetization_settings}}
+            </a>
+        </span>
+    </h3>
+</div>
+<div class="user-setting-panel">
+    <div>
+        <table id="withdrawal-requests" class="table table-striped">
+            <thead>
+                <th>ID</th>
+                <th>{{LANG requested_at}}</th>
+                <th>{{LANG amount}}: {{CONFIG payment_currency}}</th>
+                <th>{{LANG status}}</th>
+            </thead>
+            <tbody>
+                {{WITHDRAWAL_HISTORY_LIST}}
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+        $("#withdrawal-requests").DataTable();
+    });
+</script>

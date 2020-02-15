@@ -1,0 +1,57 @@
+<div class="main-comment" data-id="{{ID}}" id="comment-{{ID}}">
+   <div class="main-comment-data-sp">
+      <div class="user-avatar pull-left">
+         <img src="{{USER avatar}}" alt="{{USER name}}">
+      </div>
+      <?php if ($pt->is_comment_owner == true || $pt->video_owner) { ?>
+         <div class="pull-right delete-comment" onclick="PT_DeleteComment({{ID}});">
+            <i class="material-icons">delete</i>
+         </div>
+      <?php } ?>
+      <?php if (!empty($pt->video_owner)): ?>
+        <div class="pull-right pin-comment" onclick="PT_PinComment({{ID}},false);">
+          <i class="fa fa-thumb-tack rotate-r90d" id="pin-comment"></i>
+        </div>
+      <?php endif; ?>
+      <div class="user-name">
+
+         <span class="pin"></span>
+         <a href="{{USER url}}">{{USER name}}</a>
+         
+         <?php if ($pt->is_verified == true): ?>
+            <i class="fa fa-check-circle fa-fw verified"></i>
+         <?php endif; ?>
+         <small>{{TIME}}</small>
+         &nbsp;
+         <i class="fa fa-thumb-tack rotate-r45d"></i>
+      </div>
+      <div class="user-comment">
+         <p class="comment-text">{{TEXT}}</p>
+         <div class="width-100 div-vote-comment">
+            <span class="pointer comms-reply" onclick="PT_Reply('{{ID}}');"><small><i class="fa fa-fw fa-reply"></i> {{LANG reply}}</small></span>
+            &nbsp;
+            <span class="div-vote-comment-btn">
+               <span onclick="PT_LikeComments(this,'up','{{ID}}');" data-comment-likes="{{ID}}">
+                 <i class="material-icons {{LIKED}}">thumb_up</i> <span>{{LIKES}}</span>
+               </span>
+               &nbsp;
+               <span onclick="PT_LikeComments(this,'down','{{ID}}');" data-comment-dislikes="{{ID}}">
+                 <i class="material-icons {{DIS_LIKED}}">thumb_down</i> <span>{{DIS_LIKES}}</span>
+               </span>
+            </span>
+         </div>
+      </div>
+      <div class="clear"></div>
+   </div>
+   <div style="width: 100%;overflow: hidden;">
+      <div class="pt-comment-replies user-comment" style="width: 95%; float: right;">
+         <div class="pt-comment-item-replies-list" id="pt-comment-replies-cont-{{ID}}">
+            {{COMM_REPLIES}}
+         </div>
+         <div class="pt-comment-item-reply-form hidden" id="comm-reply-{{ID}}">
+            <input type="text" class="form-control" placeholder="{{LANG write_a_reply}}" onkeydown="PT_RVReply(this.value,'{{ID}}',event,'{{VID_ID}}');">
+         </div>      
+      </div>
+   </div>
+   <div class="clear"></div>
+</div>

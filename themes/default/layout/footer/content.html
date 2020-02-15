@@ -1,0 +1,30 @@
+<div class="container phone-container <?php echo ($pt->page == 'watch') ? 'watch-container' : '';?>">
+	<div class="footer-container">
+		<div class="footer-links pull-left">
+			<ul>
+				<li><a href="{{LINK terms/terms}}">{{LANG terms_of_use}}</a></li>
+				<li><a href="{{LINK terms/privacy-policy}}">{{LANG privacy_policy}}</a></li>
+				<li><a href="{{LINK terms/about-us}}">{{LANG about_us}}</a></li>
+				<li><a href="{{LINK contact-us}}">{{LANG contact_us}}</a></li>
+				<?php if ($pt->exp_feed === true): 
+					$page = (!empty($_GET['page'])) ? $_GET['page'] : '';
+					$category_id = (!empty($_GET['id']) && $page == 'category') ? $_GET['id'] . '/': '';
+				?>
+					<li>
+						<a href="<?php echo PT_Link("videos/$page/" . $category_id . "rss"); ?>" target="_blank"><i class="fa fa-rss rss-icon"></i> RSS</a>
+					</li>
+				<?php endif ?>
+				<li class="dropdown dropup ">
+				   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{LANG language}} <span class="caret"></span></a>
+				   <ul class="dropdown-menu" role="menu">
+				      {{LANGS}}
+				   </ul>
+				</li>
+			</ul>
+		</div>
+		<div class="footer-copyright pull-right">
+			{{LANG copyright}}
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>

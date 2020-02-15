@@ -1,0 +1,336 @@
+<div class="read-content col-md-8 no-padding-right no-padding-left">     
+   <div class="read-article-container">
+         <div class="read-article-head">
+            <h3>{{TITLE}}</h3>    
+         </div>
+         <div class="read-article-description">
+            <article>
+               {{DESC}}
+            </article>
+         </div>
+         <div class="read-article-meta">
+            <div>
+               <span><i class="fa fa-clock-o"></i> {{TIME}}</span>  &nbsp;
+               <span>{{VIEWS}} {{LANG views}} </span> &nbsp;
+               <span><a href="{{LINK articles/category/{{CATEGORY_ID}}}}" class="inherit">{{CATEGORY_NAME}}</a></span>
+               <span class="pull-right">
+                  <span onclick="PT_LikePost(this,'up');" data-post-likes="{{LIKES}}">
+                    <i class="material-icons {{LIKED}}">thumb_up</i> <span>{{LIKES}}</span>
+                  </span>
+
+                  <span onclick="PT_LikePost(this,'down');" data-post-dislikes="{{DIS_LIKES}}">
+                    <i class="material-icons {{DIS_LIKED}}">thumb_down</i> <span>{{DIS_LIKES}}</span>
+                  </span>
+               </span>
+
+            </div>
+         </div>
+             
+         <div class=" read-article-image">
+            <img src="{{IMAGE}}" alt="{{TITLE}}">   
+         </div>
+         <div class="read-article-text">
+            {{TEXT}}
+         </div>
+         <div class="read-article-share">
+            <ul>
+               <li class="share-post-btn" data-toggle="tooltip" title="{{LANG share_to}} Facebook!">
+                  <a href="https://www.facebook.com/sharer.php?u={{POST_ENCODED_URL}}" target="_blank">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                  </a>
+               </li>
+               <li class="share-post-btn" data-toggle="tooltip" title="{{LANG share_to}} Twitter!">
+                  <a href="http://twitter.com/intent/tweet?text={{TITLE}}&url={{POST_ENCODED_URL}}" target="_blank">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                  </a>
+               </li>
+               <li class="share-post-btn" data-toggle="tooltip" title="{{LANG share_to}} Google+!">
+                  <a href="https://plus.google.com/share?url={{POST_ENCODED_URL}}" target="_blank">
+                    <i class="fa fa-google-plus" aria-hidden="true"></i>
+                  </a>
+               </li>
+               <li class="share-post-btn" data-toggle="tooltip" title="{{LANG share_to}} Vkontakte!">
+                  <a href="https://vk.com/share.php?url={{POST_ENCODED_URL}}" target="_blank">
+                    <i class="fa fa-vk" aria-hidden="true"></i>
+                  </a>
+               </li>
+               <li class="share-post-btn" data-toggle="tooltip" title="{{LANG share_to}} Pinterest!">
+                  <a href="http://pinterest.com/pin/create/button/?url={{POST_ENCODED_URL}}" target="_blank">
+                    <i class="fa fa-pinterest-p" aria-hidden="true"></i>
+                  </a>
+               </li>
+               <li data-toggle="tooltip" title="Shares {{SHARED}}">
+                  <a href="#"><i class="fa fa-share" aria-hidden="true"></i> <span id="post-shares">{{SHARED}}</span></a>
+               </li>
+            </ul>
+         </div>
+         <div class="read-article-comments-container">
+            <div class="comments-content content">
+               
+               <div class="comments-header">
+                  {{LANG comments}}  {{COMMENTS_COUNT}} <span class="pull-right"><i class="material-icons">forum</i></span>
+               </div>
+               <form class="form submit-article-commet">
+                  <div class="comment-box">
+                       <textarea  name="text" rows="3" class="form-control" placeholder="{{LANG write_your_comment}}"></textarea>
+                  </div>
+                  <div class="comment-button">
+                       <div class="pull-right">
+                           <button class="btn btn-main btn-sm" type="submit">{{LANG publish}}</button>
+                       </div>
+                       <div class="clear"></div>
+                  </div>
+
+               </form>
+               <hr>
+               <div class="user-comments width-100" id="post-comments">
+                  {{COMMENTS}}
+               </div>
+
+               <?php if ($pt->count_cmt > 0): ?>
+                 <div class="watch-video-show-more load-comments">
+                     {{LANG show_more}}
+                 </div>
+               <?php endif; ?>
+
+            </div>
+         </div>    
+   </div>
+   <div class="clear"></div>
+</div>
+<div class="col-md-4">
+   <div class="read-article-sidebar read-content">
+      <div class="ra-sidebar-head">
+         <h4><i class="material-icons">library_books</i> {{LANG related_articles}}</h4>
+      </div>
+      <div class="ra-sidebar-body"> 
+         {{RELATED_ARTICLES}}
+      </div>
+      <br>
+      <div class="ra-sidebar-head">
+         <h4><i class="material-icons">video_library</i> {{LANG related_videos}}</h4>
+      </div>
+      <div class="ra-sidebar-body"> 
+         {{RELATED_VIDEOS}}
+      </div>
+   </div>
+   <div class="clear"></div>
+</div>
+
+
+<script>
+
+  jQuery(window).ready(function($) {
+      $.fn.scrollTo = function (speed) {
+        if (typeof(speed) === 'undefined')
+            speed = 500;
+
+        $('html, body').animate({
+            scrollTop: ($(this).offset().top - 100)
+        }, speed);
+
+        return $(this);
+      };
+
+      <?php if (!empty($_GET['cl']) && is_numeric($_GET['cl'])): ?>
+        if ($('#comment-<?php echo($_GET['cl']); ?>').length) {
+          var comment = $('#comment-<?php echo($_GET['cl']); ?>');
+          comment.scrollTo().find('p').addClass('active');
+          PT_Delay(function(){
+            comment.find('p').removeClass('active')
+          },2000);
+        }
+      <?php elseif(!empty($_GET['rl']) && is_numeric($_GET['rl'])): ?>
+        if ($('#reply-<?php echo($_GET['rl']); ?>').length) {
+          var reply  = $('#reply-<?php echo($_GET['rl']); ?>');
+          reply.scrollTo().find('p').addClass('active');
+          PT_Delay(function(){
+            reply.find('p').removeClass('active');
+          },2000);
+        }
+      <?php endif; ?>
+  });
+
+  jQuery(document).ready(function($) {
+      $('.share-post-btn').click(function(event) {
+        $.ajax({
+          url: '{{LINK aj/main/share}}',
+          type: 'POST',
+          dataType: 'json',
+          data: {post_id: '{{ID}}'},
+        })
+        .done(function(data) {
+          if (data.status == 200) {
+            $('#post-shares').text(data.shared);
+          }
+        })
+        .fail(function() {
+          console.log("error");
+        })
+      });
+
+      $(".load-comments").click(function(event) {
+        var self    = $(this);
+        var last_id = ($(".article-comments").length > 0) ? $(".article-comments:last").attr('data-id') : 0;
+        $.ajax({
+          url: '{{LINK aj/load-more-comments}}',
+          type: 'POST',
+          dataType: 'json',
+          data: {last_id: last_id,post_id:'{{ID}}'},
+        })
+        .done(function(data) {
+          if (data.status == 200) {
+            $('#post-comments').append(data.comments);
+          }
+          else{
+            self.text(data.message);
+          }
+        })
+        .fail(function() {
+          console.log("error");
+        })
+      });
+
+
+      var post = '{{ID}}';
+      var form = $(".submit-article-commet");
+      var hash = $('.main_session').val();
+      $(".submit-article-commet").ajaxForm({
+          url: '{{LINK aj/add-comment}}',
+          type:'POST',
+          data:{post_id:'{{ID}}',hash:hash},
+          beforeSend: function() {
+            var query = form.find('textarea').val();
+
+            if (!query){
+               form.find('textarea').addClass('danger-field-border');
+               return false;
+            }
+
+            else if(query.length > 600){
+               form.find('textarea').addClass('danger-field-border');
+               return false;
+            }
+
+            else if (!$('#main-container').attr('data-logged') && $('#main-url').val()) {
+              window.location.href = PT_Ajax_Requests_File() + 'login?to=' + $('#main-url').val();
+              return false;
+            }
+          },
+          success: function(data) {
+            if (data.status == 200) {
+               if ($('.user-comments').find('.no-comments-found').length > 0) {
+                  $('.user-comments').html(data.comment);
+               }
+
+               else{
+                  $('.user-comments').prepend(data.comment);
+               }               
+               
+               form.find('textarea').val('');
+               form.find('textarea').removeClass('danger-field-border');
+            } 
+            else {
+               swal(
+                 'Error!',
+                 'Something went wrong.Please try again later!',
+                 'error'
+               );
+            }
+          }
+      });
+  });
+
+  function PT_DeleteComment(id) {
+      if (!$('#main-container').attr('data-logged') && $('#main-url').val()) {
+        window.location.href = PT_Ajax_Requests_File() + 'login?to=' + $('#main-url').val();
+        return false;
+      }
+
+      swal({
+        title: "{{LANG confirmation}}",
+        text: "{{LANG delete_confirmation}}",
+        type: "warning",
+        confirmButtonText:"{{LANG yes_del}}",
+        cancelButtonText:"{{LANG cancel}}",
+        showCancelButton:true,
+      })
+      .then(function(willDelete){
+         if (willDelete) {
+            if (!id) { return false; }
+
+            $('#comment-' + id).slideUp('fast');
+            $.post('{{LINK aj/delete-comment}}', {id: id});
+         }
+         else {
+            swal.close();
+         }
+      },
+      function(){
+         //pass
+      });      
+  }
+
+  function PT_LikePost(self,type){
+    if (!self || (type != 'up' && type != 'down')){
+      return false;
+    }
+
+    else if (!$('#main-container').attr('data-logged') && $('#main-url').val()) {
+      window.location.href = PT_Ajax_Requests_File() + 'login?to=' + $('#main-url').val();
+      return false;
+    }
+
+    var self = $(self);
+    $.ajax({
+      url: '{{LINK aj/like-system/}}' + type,
+      type: 'POST',
+      dataType: 'json',
+      data: {post_id: '{{ID}}'}
+    })
+    .done(function(data) {
+      if (data.status == 200 && type == 'up' && data.code == 1){
+        self.find('span').text((data.up));
+        $('[data-post-dislikes]').find('span').text((data.down));
+        self.find('i').addClass('active');
+        self.siblings().find('i').removeClass('active');
+        
+      }
+
+      else if (data.status == 200 && type == 'up' && data.code == 0){
+        self.find('span').text((data.up));
+        $('[data-post-dislikes]').find('span').text((data.down));
+        self.find('i').removeClass('active');
+        self.siblings().find('i').removeClass('active');
+      }
+
+      else if (data.status == 200 && type == 'down' && data.code == 1){
+        self.find('span').text((data.down));
+        self.find('i').addClass('active');
+        $('[data-post-likes]').find('span').text((data.up));
+        self.siblings().find('i').removeClass('active');
+      }
+
+      else if (data.status == 200 && type == 'down' && data.code == 0){
+        self.find('span').text((data.down));
+        self.find('i').removeClass('active');
+        $('[data-post-likes]').find('span').text((data.up));
+        self.siblings().find('i').removeClass('active');
+      }
+
+      else{
+        swal(
+           'Error!',
+           'Something went wrong.Please try again later!',
+           'error'
+         );
+      }
+    })
+    .fail(function() {
+      console.log("error");
+    })
+  }
+
+
+
+</script>

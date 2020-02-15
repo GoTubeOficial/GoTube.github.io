@@ -1,0 +1,48 @@
+<div class="main-comment article-comments" data-id="{{ID}}" id="comment-{{ID}}">
+   <div class="main-comment-data-sp">
+      <div class="user-avatar pull-left">
+         <img src="{{USER avatar}}" alt="{{USER name}}">
+      </div>
+      <?php if ($pt->is_comment_owner == true) { ?>
+      <div class="pull-right delete-comment" onclick="PT_DeleteComment({{ID}});">
+         <i class="material-icons">delete</i>
+      </div>
+      <?php } ?>
+      <div class="user-name">
+         <a href="{{USER url}}">{{USER name}}</a> 
+         <?php if ($pt->is_verified == true): ?>
+            <i class="fa fa-check-circle fa-fw verified"></i>
+         <?php endif; ?>
+         <small>{{TIME}}</small>
+      </div>
+      <div class="user-comment">
+         {{TEXT}}
+
+         <div class="width-100 div-vote-comment">
+            <span class="pointer comms-reply" onclick="PT_Reply('{{ID}}');"><small><i class="fa fa-fw fa-reply"></i> {{LANG reply}}</small></span>
+            &nbsp;
+            <span class="div-vote-comment-btn">
+               <span onclick="PT_LikeComments(this,'up','{{ID}}');" data-comment-likes="{{ID}}">
+                 <i class="material-icons {{LIKED}}">thumb_up</i> <span>{{LIKES}}</span>
+               </span>
+               &nbsp;
+               <span onclick="PT_LikeComments(this,'down','{{ID}}');" data-comment-dislikes="{{ID}}">
+                 <i class="material-icons {{DIS_LIKED}}">thumb_down</i> <span>{{DIS_LIKES}}</span>
+               </span>
+            </span>
+         </div>
+      </div>
+   </div>
+   <div style="width: 100%;overflow: hidden;">
+      <div class="pt-comment-replies user-comment" style="width: 95%; float: right;">
+         <div class="pt-comment-item-replies-list" id="pt-comment-replies-cont-{{ID}}">
+            {{COMM_REPLIES}}
+         </div>
+         <div class="pt-comment-item-reply-form hidden" id="comm-reply-{{ID}}">
+            <input type="text" class="form-control" placeholder="{{LANG write_a_reply}}" onkeydown="PT_RPReply(this.value,'{{ID}}',event,'{{POST_ID}}');">
+         </div>      
+      </div>
+   </div>
+   
+   <div class="clear"></div>
+</div>

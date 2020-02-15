@@ -1,0 +1,216 @@
+<nav class="navbar navbar-findcond navbar-fixed-top header-layout">
+    <div class="container <?php echo ($pt->page == 'watch') ? 'watch-container' : '';?>">
+		<div class="navbar-header pull-left-mobile">
+			<a class="navbar-brand logo-img" href="{{LINK }}" itemprop="url"><img itemprop="logo" src="{{CONFIG theme_url}}/img/<?php echo ($pt->mode != 'night') ? 'logo' : 'logo-light';?>.png" alt="{{CONFIG title}}"></a>
+			<form class="navbar-form navbar-left search-header" role="search" action="{{LINK search}}" method="GET">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="search-bar" name="keyword" placeholder="{{LANG search_keyword}}" autocomplete="off" value="{{SEARCH_KEYWORD}}"> 
+                    <i class="fa fa-search" onclick="javascript:$('.search-header input').focus();"></i>
+                </div>
+                <div class="search-dropdown hidden"></div>
+            </form>
+		</div>
+		<div class="pull-right-mobile">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="show-in-mobile">
+				   <a href="#" class="search-icon"><i class="fa fa-search fa-fw"></i> </a>
+				</li>
+			    <?php if ($pt->config->upload_system == 'on') { ?> 
+			    <li class="hide-from-mobile">
+				   <a href="{{LINK upload-video}}" class="upload-button"><i class="fa fa-upload fa-fw"></i> <span class="hide-in-mobile">{{LANG upload}}</span></a>
+				</li>
+				<?php } ?>
+				<?php if ($pt->config->import_system == 'on') { ?> 
+			    <li class="hide-from-mobile">
+				   <a href="{{LINK import-video}}" class="import-button"><i class="fa fa-cloud-download fa-fw"></i> <span class="hide-in-mobile">{{LANG import}}</span></a>
+				</li>
+				<?php } ?>
+				<?php if (IS_LOGGED): ?>
+				<li class="hide-from-mobile dropdown">
+				    <a href="javascript:void(0);"  id="get-notifications" class=" dropdown-toggle" data-toggle="dropdown">
+				   		<i class="fa fa-bell-o fa-fw"></i>
+				   		<span id="new-notifications"></span>
+				    </a>
+				    <ul class="dropdown-menu notfi-dropdown" id="notifications">
+					    <li>
+					    	<h5>
+					    		<i class="fa fa-bullhorn"></i> {{LANG notifications}} <b id="all-notifications"></b> 
+					    		<i class="fa fa-circle-o-notch spin hidden"></i>
+					    	</h5>
+					    </li>
+					    <li>
+					    	<ul id="notifications-list">
+					    		
+					    	</ul>
+					    </li>
+				    </ul>
+				</li>
+				<li class="hide-from-mobile">
+					 <a href="{{LINK messages}}">
+				   		<i class="fa fa-comments-o fa-fw"></i>
+				   		<span id="new-messages"></span>
+				    </a>
+				</li>
+				<?php endif; ?>
+				{{SIDE_HEADER}}
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<nav class="navbar navbar-findcond navbar-fixed-top header-layout hidden search-bar" style="margin-top: 49px;">
+    <div class="container <?php echo ($pt->page == 'watch') ? 'watch-container' : '';?>">
+		<div class="navbar-header">
+			<form class="search-header-mobile" role="search" action="{{LINK search}}" method="GET">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="search-bar-mobile" name="keyword" placeholder="{{LANG search_keyword}}" autocomplete="off" value="{{SEARCH_KEYWORD}}"> 
+                </div>
+                <div class="search-dropdown hidden"></div>
+            </form>
+		</div>
+	</div>
+</nav>
+<?php if ($pt->page != 'login') { ?>
+<nav class="navbar navbar-findcond navbar-default second-header-layout">
+    <div class="container <?php echo ($pt->page == 'watch') ? 'watch-container' : '';?>">
+		<div class="navbar-inner" id="navbar">
+			<ul class="nav navbar-nav">
+			    <li class="hide-from-mobile <?php echo ($pt->page == 'home') ? 'active': '';?>">
+					<a href="{{LINK }}"> {{LANG home}}</a>
+				</li>
+				<li class="hide-from-mobile <?php echo ($pt->page == 'latest') ? 'active': '';?>">
+					<a href="{{LINK videos/latest}}">{{LANG latest_videos}}</a>
+				</li>
+				<li class="hide-from-mobile <?php echo ($pt->page == 'top') ? 'active': '';?>">
+					<a href="{{LINK videos/top}}">{{LANG top_videos}}</a>
+				</li>
+				<li class="hide-from-mobile <?php echo ($pt->page == 'trending') ? 'active': '';?>">
+					<a href="{{LINK videos/trending}}">{{LANG trending}}</a>
+				</li>
+				<li class="dropdown hide-from-mobile <?php echo ($pt->page == 'category') ? 'active': '';?>">
+				   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{LANG categories}} <span class="caret"></span></a>
+				   <ul class="dropdown-menu categories-drop-down" role="menu">
+				    <?php foreach($pt->categories as $key => $category) { 
+					    if (1) { ?>
+					    <li class="hide-from-mobile">
+						   <a class="category" href="{{LINK videos/category/<?php echo $key?>}}"><?php echo $category?></a>
+						</li>
+					<?php } }?>
+				   </ul>
+				</li>
+				<li class="dropdown hide-from-mobile <?php echo ($pt->page == 'articles') ? 'active': '';?>">
+				   <a href="{{LINK articles}}">{{LANG articles}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<?php } ?>
+
+<?php if (IS_LOGGED): ?>
+<script>
+	jQuery(document).ready(function($) {
+		pt_get_notifications({type:'new'});
+		
+		$("#get-notifications").click(function(event) {
+			if ($('#notifications').css('display') == 'none') {
+				var notfi_cont = $("ul.notfi-dropdown");
+				
+				if ($("span#new-notifications").html() != '') {
+					$(this).find('span#new-notifications').empty();
+				}
+
+				pt_get_notifications({sa:1});
+			}
+		});
+
+		setInterval(function(){
+			pt_get_notifications({type:'new'});
+		},(1000 * 60));
+	});
+
+	function pt_get_notifications(args = {}){
+		var notfi_cont = $("ul.notfi-dropdown");
+		var notfi_set  = $("ul#notifications");
+		
+		defparams = {
+			type: false,
+			sa:false
+		}
+
+		options = Object.assign(defparams,args);
+		data    = {'hash':$('.main_session').val()};
+
+		if (options['type']) {
+			data['t'] = options['type'];
+		}
+
+		if (options['sa']) {
+			data['sa'] = options['sa'];
+			notfi_set.find('i.spin').removeClass('hidden');
+		}
+
+		$.ajax({
+			url: '{{LINK aj/get_notifications}}',
+			type: 'GET',
+			dataType: 'json',
+			data:data
+		})
+		.done(function(data) {
+			if (data.status == 200) {
+				if (data.new) {
+					$("span#new-notifications").html($('<b>',{
+						text:data.new
+					}));
+				}
+				else{
+					notfi_set.find('b').text(data.len);
+					notfi_set.find('ul').html(data.html);
+				}			
+			}
+			else if(data.status == 304 && options['sa']){
+				notfi_set.find('ul').html($("<li>",{
+					class:'no-notifications',
+					text:'You do not have any notifications'
+				}));
+			}
+
+			if (options['sa']) {notfi_set.find('i.spin').addClass('hidden');}
+			
+		})
+		.fail(function() {
+			console.log("error");
+		});
+	}
+</script>
+<?php endif ?>
+
+<script>
+
+
+
+$('.search-icon').on('click', function(event) {
+	event.preventDefault();
+	$('.search-bar').toggleClass('hidden');
+});
+$('#search-bar').keyup(function(event) {
+	var search_value = $(this).val();
+	var search_dropdown = $('.search-dropdown');
+	if (search_value == '') {
+		search_dropdown.addClass('hidden');
+		search_dropdown.empty();
+		return false;
+	} else {
+		search_dropdown.removeClass('hidden');
+	}
+    $.post('{{LINK aj/search}}', {search_value: search_value}, function(data, textStatus, xhr) {
+    	if (data.status == 200) {
+    		search_dropdown.html(data.html);
+    	} else {
+	       search_dropdown.addClass('hidden');
+		   search_dropdown.empty();
+		   return false;
+    	}
+    });
+});
+</script>

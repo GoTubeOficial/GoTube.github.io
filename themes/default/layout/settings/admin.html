@@ -1,0 +1,69 @@
+<!-- Multiple Radios -->
+<div class="form-group">
+	<label class="col-md-2" for="activation">{{LANG status}}</label>
+	<div class="col-md-6">
+		<div >
+			<label for="activation-0">
+			<input type="radio" name="activation" id="activation-0" value="1" <?php echo ($pt->settings->active == 1) ? 'checked': ''?>>
+			{{LANG active}}
+			</label>
+		</div>
+		<div >
+			<label for="activation-1">
+			<input type="radio" name="activation" id="activation-1" value="2" <?php echo ($pt->settings->active == 2) ? 'checked': ''?>>
+			{{LANG inactive}}
+			</label>
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-2" for="type"></label>
+	<div class="col-md-6">
+		<div class=" ">
+			<label for="is_pro-1">
+			<input type="radio" name="is_pro" id="is_pro-1" value="1" <?php echo ($pt->settings->is_pro == '1') ? 'checked': ''?>>
+			{{LANG pro_mbr}}
+			</label>
+		</div>
+		<div >
+			<label for="is_pro-0">
+			<input type="radio" name="is_pro" id="is_pro-0" value="0" <?php echo ($pt->settings->is_pro == '0') ? 'checked': ''?>>
+			{{LANG free_mbr}}
+			</label>
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-2" for="type">{{LANG type}}</label>
+	<div class="col-md-6">
+		<div >
+			<label for="type-0">
+			<input type="radio" name="type" id="type-0" value="1" <?php echo ($pt->settings->admin == 0) ? 'checked': ''?>>
+			{{LANG user}}
+			</label>
+		</div>
+		<div >
+			<label for="type-1">
+			<input type="radio" name="type" id="type-1" value="2" <?php echo ($pt->settings->admin == 1) ? 'checked': ''?>>
+			{{LANG admin}}
+			</label>
+		</div>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-md-2" for="type">{{LANG verification}}</label>
+	<div class="col-md-6">
+		<div class=" ">
+			<label for="verified-0">
+			<input type="radio" name="verified" id="verified-0" value="verified" <?php echo ($pt->settings->verified == 1) ? 'checked': ''?>>
+			{{LANG verified}}
+			</label>
+		</div>
+		<div >
+			<label for="verified-1">
+			<input type="radio" name="verified" id="verified-1" value="no_verified" <?php echo ($pt->settings->verified == 0) ? 'checked': ''?>>
+			{{LANG not_verified}}
+			</label>
+		</div>
+	</div>
+</div>

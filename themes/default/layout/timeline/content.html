@@ -1,0 +1,50 @@
+<div class="profile-container">
+	<div class="card-container">
+		<div class="cover-container">
+			<img src="{{USER cover}}" alt="{{USER name}}">
+		</div>
+		<div class="text-shadow"></div>
+		<div class="avatar-container">
+			<img src="{{USER avatar}}" alt="{{USER name}}">
+		</div>
+		<div class="info-container">
+			<h4><a href="{{USER url}}">{{USER name_v}}</a></h4>
+		</div>
+		<div class="subscribe-btn-container">
+			{{MESSAGE_BUTTON}}
+			{{SUBSCIBE_BUTTON}}
+		</div>
+		
+		<?php if ($pt->isowner == true) { ?>
+		<div class="edit-cover-container hidden">
+			<a href="{{LINK settings/avatar}}"><i class="fa fa-camera"></i></a>
+		</div>
+		<?php } ?>
+	</div>
+	<div class="links-container">
+		<ul>
+			<li>
+				<a href="{{LINK @{{USER username}}?page=videos}}" class="<?php echo ($pt->second_page == 'videos') ? 'active' : ''?>">{{LANG videos}}</a>
+			</li>
+			<li>
+				<a href="{{LINK @{{USER username}}?page=play-lists}}" class="<?php echo ($pt->second_page == 'play-lists') ? 'active' : ''?>">{{LANG play_lists}}</a>
+			</li>
+			<li>
+				<a href="{{LINK @{{USER username}}?page=liked-videos}}" class="<?php echo ($pt->second_page == 'liked-videos') ? 'active' : ''?>">{{LANG liked_videos}}</a>
+			</li>
+			<li>
+				<a href="{{LINK @{{USER username}}?page=about}}" class="<?php echo ($pt->second_page == 'about') ? 'active' : ''?>">{{LANG about_profile}}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="page-container content">
+		{{SECOND_PAGE}}
+	</div>
+	<input type="hidden" id="profile-id" value="{{USER id}}">
+</div>
+
+<style>
+	.profile-container .links-container ul li {
+	    width: 25%;
+	}
+</style>

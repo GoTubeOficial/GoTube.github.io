@@ -1,0 +1,189 @@
+<div class="content">
+   <div class="col-md-12">
+      <div class="upload-head">
+         <h4>{{LANG import_new_video}}</h4>
+         <hr>
+      </div>
+      <div class="alert alert-danger"></div>
+      <div class="col-md-7" id="fetch-form">
+         <form action="" class="form-horizontal setting-panel" method="POST">
+            <fieldset>
+               <div class="row">
+                  <div class="form-group col-md-12">
+                     <label class="col-md-2" for="url">{{LANG video_url}}</label>  
+                     <div class="col-md-10">
+                        <input id="url" name="url" type="text" placeholder="" class="form-control input-md"> 
+                        <span class="help-block">{{LANG url_desc}}, mp4</span>
+                     </div>
+                  </div>
+                  <div class="form-group col-md-1">
+                     <label class="col-md-3" for="submit"></label>  
+                     <div class="col-md-7">
+                        <button type="button" class="btn btn-main btn-sm fetch-url">{{LANG fetch_Video}}</button>
+                     </div>
+                  </div>
+               </div>
+               <div class="clear"></div>
+            </fieldset>
+         </form>
+      </div>
+      <div class="col-md-12 import-form-content hidden">
+         <div class="errors alert alert-danger"></div>
+         <div class="row">
+            <div class="col-md-8" id="import-form">
+               <form action="" class="form-horizontal setting-panel" method="POST" id="submit-imported-video">
+                  <fieldset>
+                     <div class="form-group">
+                        <label class="col-md-3" for="title">{{LANG video_title}}</label>  
+                        <div class="col-md-8">
+                           <input id="title" name="title" type="text" placeholder="" class="form-control input-md">
+                           <span class="help-block">{{LANG video_title_help}}</span>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="col-md-3" for="description">{{LANG video_descritpion}}</label>  
+                        <div class="col-md-8">
+                           <textarea name="description" id="description" cols="30" rows="8" class="form-control"></textarea>
+                        </div>
+                     </div>
+                      <div class="form-group">
+                        <label class="col-md-3" for="category_id">{{LANG category}}</label>  
+                        <div class="col-md-8">
+                           <select name="category_id" id="category_id" class="form-control">
+                              <?php foreach($pt->categories as $key => $category) {?>
+                              <option value="<?php echo $key?>"><?php echo $category?></option>
+                              <?php } ?>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="col-md-3" for="tags">{{LANG tags}}</label>  
+                        <div class="col-md-8">
+                           <input id="mySingleFieldTags" name="tags" type="text" placeholder="" class="form-control input-md">
+                           <span class="help-block">{{LANG tags_help}}</span>
+                        </div>
+                     </div>
+                     <input type="hidden" name="thumbnail-image" class="thumbnail">
+                     <input type="hidden" name="video-type" class="type">
+                     <input type="hidden" name="video-id" class="video-id">
+                     <input type="hidden" name="duration" class="duration">
+                     <input id="thumbnail" name="thumbnail" type="file" accept="image/*" class="hidden">
+                     <div class="form-group">
+                        <label class="col-md-3" for="submit"></label>  
+                        <div class="col-md-8">
+                           <button type="submit" class="btn btn-main btn-sm submit-url">{{LANG publish}}</button>
+                        </div>
+                     </div>
+                     <div class="clear"></div>
+                  </fieldset>
+               </form>
+            </div>
+            <div class="col-md-4">
+               <div class="thumbnail-preview edit-thumb thumbnail-preview-renderer">
+                 <img src="" alt="Picture">
+               </div>
+               <div class="video-title">
+                  <p></p>
+               </div>
+               <div class="video-description">
+                  <p></p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="clear"></div>
+</div>
+<script>
+$(function () {
+
+   $('.edit-thumb').on('click', function(event) {
+      $('#thumbnail').trigger('click');
+   });
+
+   $('#thumbnail').on('change', function(event) {
+      readURL(this);
+   });
+
+   $('#submit-imported-video').ajaxForm({
+       url: '{{LINK aj/submit-imported-video}}?hash=' + $('.main_session').val(),
+       beforeSend: function() {
+         $('.submit-url').attr('disabled', true);
+         $('.submit-url').val("{{LANG please_wait}}");
+       },
+       success: function(data) {
+         if (data.status == 200) {
+            window.location.href = data.link;
+         } 
+         else {
+            scrollToTop();
+            $('.submit-url').attr('disabled', false);
+             $('.submit-url').val('{{LANG publish}}');
+            $('.errors').removeClass('hidden').html(data.message);
+         }
+       }
+   });
+   $('#description').keyup(function(event) {
+      str = $(this).val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+      $('.video-description p').html(str);
+   });
+   $('#title').keyup(function(event) {
+      $('.video-title p').html($(this).val());
+   });
+   $('#mySingleFieldTags').tagit();
+	$('.fetch-url').on('click', function () {
+		$(this).text("{{LANG please_wait}}");
+		$.post('{{CONFIG site_url}}/aj/fetch-video', {link: $('#url').val()}, function(data, textStatus, xhr) {
+			$('.fetch-url').text('{{LANG fetch_Video}}');
+			if (data.status == 200) {
+            if ($("#mySingleFieldTags").val()) {
+               $(".tagit-choice").remove();
+            }
+            $('.alert-danger').empty();
+				$('#title').val(data.title);
+            $('.video-title p').html(data.title);
+            $('#description').val(data.description);
+            $('.video-description p').html(data.description_br);
+            $('#mySingleFieldTags').val(data.tags);
+            $('.duration').val(data.duration);
+            var partsOfStr = data.tags.split(',');
+            for (i = 0; i < partsOfStr.length; i++) {
+               $('#mySingleFieldTags').tagit("createTag", partsOfStr[i]);
+            }
+            $('.thumbnail').val(data.thumbnail);
+            
+            $('.thumbnail-preview img').attr('src', data.full_thumb);
+            $('.video-id').val(data.video_id);
+            $('.type').val(data.type);
+            $('.import-form-content').removeClass('hidden');
+			} 
+
+         else if(data.status == 401){
+            swal({
+               title: '{{LANG oops}}!',
+               text: "{{LANG import_limit_reached}}!",
+               type: 'info',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: '{{LANG upgrade_now}}',
+               cancelButtonText: '{{LANG cancel}}',
+               confirmButtonClass: 'btn btn-success margin-right',
+               cancelButtonClass: 'btn',
+               buttonsStyling: false
+            }).then(function(){
+               window.location.href = '{{LINK go_pro}}';
+            },
+            function() {
+               window.location.href = '{{LINK }}';
+            });
+            
+         }
+         else {
+				$('.alert-danger').html(data.message);
+			}
+		},dataType = 'json');
+	});
+});
+
+</script>

@@ -1,0 +1,274 @@
+<div class="content">
+   <div class="col-md-12">
+      <div class="upload-head">
+         <h4>{{LANG upload_new_video}}</h4>
+         <hr>
+      </div>
+      <?php if ($pt->user->admin == 1) { ?>
+      <div class="alert alert-warning">
+         <h4>Just admins can see this message</h4>
+         <p>Note: Your server max upload size is: <?php echo ini_get('upload_max_filesize')?>, means you can't upload files that are larger than: <?php echo ini_get('upload_max_filesize')?><br><br> If you want to increase the limit or If you can't upload large files, go to Admin Settings > Settings > Site Settings > Max upload size and increase the value, if you still can't upload large files, please contact your host provider and let them increase the upload limit and max_execution_time.</p>
+      </div>
+      <?php } ?>
+      <div class="upload" onclick="PT_OpenUploadForm();" data-block="video-drop-zone">
+         <div>
+            <h4>{{LANG darg_drop_video}}</h4>
+            <span>{{LANG or}}</span>
+            <p>
+               {{LANG click_2choose_file}}
+            </p>
+         </div>
+      </div>
+      <div class="progress hidden">
+         <div class="upload-progress-bar bar progress-bar progress-bar-striped active"></div>
+         <div class="percent">0%</div>
+      </div>
+      <div id="video-success" class="alert alert-success"></div>
+      <div class="errors alert alert-danger"></div>
+      <form action="" method="POST" id="upload-video" class="hidden">
+         <input type="file" name="video" accept="video/*" class="upload-video-file">
+      </form>
+      <div class="col-md-7 hidden" id="upload-form">
+         <form action="" class="form-horizontal setting-panel" method="POST">
+            <fieldset>
+               <div class="form-group">
+                  <label class="col-md-3" for="title">{{LANG video_title}}</label>  
+                  <div class="col-md-7">
+                     <input id="title" name="title" type="text" placeholder="" class="form-control input-md">
+                     <span class="help-block">{{LANG video_title_help}}</span>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="description">{{LANG video_descritpion}}</label>  
+                  <div class="col-md-7">
+                     <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="category_id">{{LANG category}}</label>  
+                  <div class="col-md-7">
+                     <select name="category_id" id="category_id" class="form-control">
+                        <?php foreach($pt->categories as $key => $category) {?>
+                        <option value="<?php echo $key?>"><?php echo $category?></option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="tags">{{LANG tags}}</label>  
+                  <div class="col-md-7">
+                     <input id="mySingleFieldTags" name="tags" type="text" placeholder="" class="form-control input-md">
+                     <span class="help-block">{{LANG tags_help}}</span>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-md-3" for="thumbnail">{{LANG thumbnail}}</label>  
+                  <div class="col-md-7">
+                     <input id="thumbnail" name="thumbnail" type="file" accept="image/*">
+                     <span class="help-block">jpg, png, gif</span>
+                  </div>
+               </div>
+               <div class="form-group ">
+                  <label class="col-md-3" for="submit"></label>  
+                  <div class="col-md-7">
+                     <input type="submit" id="submit-btn" class="btn btn-main" disabled value="{{LANG publish}}">
+                  </div>
+               </div>
+               <input type="hidden" name="video-location" id="video-location" value="">
+            </fieldset>
+         </form>
+      </div>
+      <div class="clear"></div>
+   </div>
+   <div class="clear"></div>
+</div>
+<script>
+$(function () {
+	$("#mySingleFieldTags").tagit();
+	var bar         = $('.bar');
+   var percent     = $('.percent');
+   var is_uploaded = false;
+
+   var video_drop_block = $("[data-block='video-drop-zone']");
+
+   if (typeof(window.FileReader)){
+      video_drop_block[0].ondragover = function() {
+         video_drop_block.addClass('hover');
+         return false;
+      };
+          
+      video_drop_block[0].ondragleave = function() {
+         video_drop_block.removeClass('hover');
+         return false;
+      };
+
+      video_drop_block[0].ondrop = function(event) {
+         event.preventDefault();
+         video_drop_block.removeClass('hover');
+         var file = event.dataTransfer.files;
+         $('#upload-video').find('input').prop('files', file);
+      };
+   }
+
+	$('#upload-video').submit(function(event) {
+      let file_size = $(".upload-video-file").prop('files')[0].size;
+      if (file_size > "{{CONFIG max_upload}}") {
+         swal({
+            title: '{{LANG error}}',
+            text:  "{{LANG file_is_too_big}} <?php echo pt_size_format($pt->config->max_upload); ?>",
+            type: 'error',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'OK',
+            buttonsStyling: true,
+            confirmButtonClass: 'btn btn-success',
+         }).then(function(){
+            swal.close();
+            $('.upload-video-file').val('');
+         },
+         function() {
+            swal.close();
+            $('.upload-video-file').val('');
+         });
+         return false;
+      }
+      else{
+         var filename = $('.upload').val().split('\\').pop();
+         $('#title').val(filename);
+         $('#upload-form').removeClass('hidden');
+         $('.upload').addClass('hidden');
+      }
+   });
+
+   $('#upload-video').ajaxForm({
+	    url: '{{LINK aj/upload-video}}?hash=' + $('.main_session').val(),
+       dataType:'json',
+	    beforeSend: function() {
+	    	   $('.progress').removeClass('hidden');
+            var percentVal = '0%';
+            bar.width(percentVal);
+            percent.html(percentVal);
+	    },
+	    uploadProgress: function(event, position, total, percentComplete) {
+	         if(percentComplete > 50) {
+	            percent.addClass('white');
+	         }
+            var percentVal = percentComplete + '%';
+            bar.width(percentVal);
+            percent.html(percentVal);
+
+            if (percentComplete == 100) {
+               percent.html('{{LANG porcessing_video}}');
+               $('.progress').find('.bar').removeClass('upload-progress-bar');
+            }
+        },
+	    success: function(data) {
+   	    	percentVal = '0%';
+   	    	bar.width(percentVal);
+            $('.progress').addClass('hidden');   
+            
+            if (data.status == 200) {
+            	$('#video-location').val(data.file_path);
+            	$('#video-success').html('<i class="fa fa-check"></i> ' + data.file_name + ' {{LANG successfully_uplaoded}}');
+            	$('#submit-btn').attr('disabled', false);
+            	$('.upload-video-file').val('');
+               
+            }
+            else if(data.status == 401){
+               swal({
+                  title: '{{LANG oops}}!',
+                  text: "{{LANG upload_limit_reached}}!",
+                  type: 'info',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: '{{LANG upgrade_now}}',
+                  cancelButtonText: '{{LANG cancel}}',
+                  confirmButtonClass: 'btn btn-success margin-right',
+                  cancelButtonClass: 'btn',
+                  buttonsStyling: false
+               }).then(function(){
+                  //Go pro
+                  window.location.href = '{{LINK go_pro}}';
+               },
+               function() {
+                  window.location.href = '{{LINK }}';
+               });
+               
+            }
+            else if(data.status == 402){
+               swal({
+                  title: '{{LANG error}}',
+                  text: data.message,
+                  type: 'error',
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK',
+                  buttonsStyling: true,
+                  confirmButtonClass: 'btn btn-success',
+               }).then(function(){
+                  swal.close();
+                  $('.upload-video-file').val('');
+               },
+               function() {
+                  swal.close();
+                  $('.upload-video-file').val('');
+               });
+               
+            }
+            else {
+            	alert(data.error);
+            }
+	    }
+	});
+
+	$('#upload-form form').ajaxForm({
+	    url: '{{LINK aj/submit-video}}?hash=' + $('.main_session').val(),
+	    beforeSend: function() {
+	    	$('#submit-btn').attr('disabled', true);
+	    	$('#submit-btn').val("{{LANG please_wait}}");
+	    },
+	    success: function(data) {
+	    	if (data.status == 200) {
+	    		window.location.href = data.link;
+	    	} 
+         else if(data.status == 402){
+            swal({
+               title: '{{LANG error}}',
+               text: data.message,
+               type: 'error',
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'OK',
+               buttonsStyling: true,
+               confirmButtonClass: 'btn btn-success',
+            }).then(function(){
+               window.location.href = '{{LINK upload-video}}';
+            },
+            function() {
+               window.location.href = '{{LINK }}';
+            });
+            
+         }
+         else {
+	    		$('#submit-btn').attr('disabled', false);
+	    	    $('#submit-btn').val('{{LANG publish}}');
+	    		$('.errors').removeClass('hidden').html(data.message);
+	    	}
+	    }
+	});
+
+	$('.upload-video-file').on('change', function() {
+   	$('#upload-video').submit();
+	});
+});
+
+function PT_OpenUploadForm() {
+	$('#upload-video').find('input').trigger('click');
+}
+</script>
+<style>
+   .upload-s3-progressing{
+      background: #4c9dd3;
+   }
+</style>

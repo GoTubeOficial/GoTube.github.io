@@ -1,0 +1,41 @@
+<div class="col-md-12">
+    <div class="row">
+        <div class="content">
+            <div class="home-page-categories">
+                <div class="title">
+                    <h4>
+                        {{CATEGORY_ONE_NAME}} 
+                        <span>
+                            <a href="<?php echo (!empty($pt->subscriptions)) ? "{{LINK subscriptions}}" : "{{LINK videos/category/{{CATEGORY_ONE_ID}}}}" ?>">
+                                {{LANG explore_more}} <i class="fa fa-arrow-right fa-fw"></i>
+                            </a>
+                        </span>
+                    </h4>
+                </div>
+                <div class="videos">
+                    <div class="row">
+                        
+                        <?php 
+                            foreach ($pt->cat_videos as $key => $video) {
+                                $video = PT_GetVideoByID($video, 0, 0, 0);
+                                echo PT_LoadPage('home/list', array(
+                                    'ID' => $video->id,
+                                    'TITLE' => $video->title,
+                                    'VIEWS' => $video->views,
+                                    'VIEWS_NUM' => number_format($video->views),
+                                    'USER_DATA' => $video->owner,
+                                    'THUMBNAIL' => $video->thumbnail,
+                                    'URL' => $video->url,
+                                    'TIME' => $video->time_ago,
+                                    'DURATION' => $video->duration
+                                ));
+                            }
+                        ?>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>

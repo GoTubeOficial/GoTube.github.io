@@ -1,0 +1,79 @@
+<div class="settings-header">
+    <h3><i class="fa fa-envelope-o"></i> {{LANG contact_us}}</h3>
+</div>
+<form class="form-horizontal user-setting-panel contact-us-form" method="POST">
+    <div class="contact-us-alert"></div>
+	<div class="col-md-8">
+		<div class="list-">
+			<fieldset>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-md-3" for="first_name">{{LANG first_name}} *</label>  
+					<div class="col-md-6">
+					   <input id="first_name" name="first_name" type="text" class="form-control input-md">
+					</div>
+				</div>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-md-3" for="last_name">{{LANG last_name}} *</label>  
+					<div class="col-md-6">
+					   <input id="last_name" name="last_name" type="text" class="form-control input-md">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3" for="email">{{LANG email}} *</label>  
+					<div class="col-md-6">
+					   <input name="email" id="email" type="text" class="form-control input-md">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3" for="message">{{LANG message}} *</label>  
+					<div class="col-md-6">
+					   <textarea name="message" id="message" rows="5" class="form-control input-md"></textarea>
+					</div>
+				</div>
+				<hr>
+				<div class="form-group last-btn">
+					<label class="col-md-3"></label>
+					<div class="col-sm-3 text-left">
+					   <button type="submit" name="send" id="send" tabindex="4" class="form-control btn btn-main">
+					   <i class="fa fa-paper-plane-o progress-icon" data-icon="paper-plane-o"></i> 
+					   {{LANG submit}}
+					   </button>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+	<div class="clear"></div>
+</form>
+<!-- .page-margin -->
+<script>
+	$(function() {
+		var form = $('form.contact-us-form');
+		form.ajaxForm({
+			url: '{{LINK aj/contact_us}}?hash=' + $('.main_session').val(),
+			dataTyep:'json',
+			beforeSend: function() {
+				form.find('button').text("{{LANG please_wait}}");
+			},
+			success: function(data) {
+				if (data.status == 200) {
+					$('.contact-us-alert').html($('<div>',{
+						class: "alert alert-success",
+						html: data.message
+					}));
+
+					$('.alert-success').fadeIn(300);
+				} 
+				else {
+					$('.contact-us-alert').html($('<div>',{
+						class: "alert alert-danger",
+						html: data.message
+					}));
+				}
+				form.find('button').html("<i class=\"fa fa-paper-plane-o progress-icon\" data-icon=\"paper-plane-o\"></i> {{LANG submit}}");
+			}
+		});
+	});
+</script>

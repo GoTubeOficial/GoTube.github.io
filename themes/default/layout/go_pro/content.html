@@ -1,0 +1,119 @@
+
+
+<?php if ($pt->user->is_pro ==  0): ?>
+	
+
+<div class="go-pro-container">
+	<div class="go-pro-head">
+		<h4> {{LANG buy_pro_pkg}}</h4>
+	</div>
+	<div class="go-pro-body">
+		<div class="go-pro-packages">
+			<div class="col-md-6 col-sm-12 col-xs-12 go-pro-pkg">
+				<div>
+					<h4 class="free-bg">
+						<span class="pull-left go-pro-pkg-price">{{LANG free_mbr}}</span> 
+						<span class="pull-right go-pro-pkg-price"><span class="package-price">0</span> {{CURRENCY}}</span>
+					</h4>
+					<div class="go-pro-pkg-features">
+						<figure class="free-triangle">
+						
+						</figure>
+						<div class="go-pro-features-list">
+							<p>{{LANG upload_1gb_limit}}</p>
+							<p>{{LANG ads_will_show_up}}</p>
+							<p>{{LANG not_featured_videos}}</p>
+							<p>{{LANG no_verified_badge}}</p>
+						</div>
+						<div class="go-pro-pkg-purchase">
+							<button class="btn btn-main free-bg" onclick="window.location.href= '{{LINK }}'">
+								{{LANG stay_free}}
+							</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-12 col-xs-12 go-pro-pkg">
+				<div>
+					<h4 class="pro-bg">
+						<span class="pull-left go-pro-pkg-price">{{LANG pro_mbr}}</span> 
+						<span class="pull-right go-pro-pkg-price"><span class="package-price">{{CONFIG pro_pkg_price}}</span> {{CURRENCY}}</span>
+					</h4>
+					<div class="go-pro-pkg-features">
+						<figure class="pro-triangle">
+						
+						</figure>
+						<div class="go-pro-features-list">
+							<p>{{LANG upload_1tr_limit}}</p>
+							<p>{{LANG ads_wont_show_up}}</p>
+							<p>{{LANG ur_are_featured}}</p>
+							<p>{{LANG verified_badge}}</p>
+						</div>
+						<div class="go-pro-pkg-purchase">
+							<button class="btn btn-main pro-bg" onclick="PT_PurchasePkg('pro',this);">
+								{{LANG upgrade}}
+							</button>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+	function PT_PurchasePkg(pkg,self){
+		if (!pkg || pkg != 'pro' || !self) {
+			return false;
+		}
+
+		$(self).text("{{LANG please_wait}}").attr('disabled', 'true');
+
+		$.ajax({
+			url: '{{LINK aj/go_pro/purchase}}',
+			type: 'POST',
+			dataType: 'json',
+			data: {type: pkg},
+		})
+		.done(function(data) {
+			if (data.status == 200) {
+				document.location.href = data.url;
+			}
+			else{
+				swal({
+					title:"{{LANG error}}",
+					text:"{{LANG error_msg}}",
+					type:"error"
+				})
+			}
+		})
+		.fail(function() {
+			console.log("error");
+		});
+	}
+</script>
+<?php else: ?>
+<div class="go-pro-container">
+	<div class="go-pro-head-upgraded">
+		<h4>{{LANG congratulations}}</h4>
+		<p class="text-center">{{LANG uare_pro}}</p>
+	</div>
+	<div class="go-pro-body-upgraded">
+		<div class="upgraded-features">
+			<p><span><i class="fa fa-check"></i></span> {{LANG upload_1tr_limit}}</p>
+			<p><span><i class="fa fa-check"></i></span> {{LANG ads_wont_show_up}}</p>
+			<p><span><i class="fa fa-check"></i></span> {{LANG ur_are_featured}}</p>
+			<p><span><i class="fa fa-check"></i></span> {{LANG verified_badge}}</p>
+		</div>
+	</div>
+	<div class="go-pro-footer-upgraded">
+		<button class="btn-main btn btn-lg">
+			<a href="{{LINK }}">{{LANG start_features}}</a>
+		</button>
+	</div>
+</div>
+<?php endif; ?>

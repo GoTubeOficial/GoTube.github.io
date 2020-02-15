@@ -1,0 +1,49 @@
+<?php
+if (IS_LOGGED == false) {
+    header("Location: " . PT_Link('login'));
+    exit();
+}
+
+$list = '<div class="text-center no-content-found">' . $lang->no_videos_found_liked . '</div>';
+$final = '';
+
+$get = $db->where('user_id', $user->id)->where('type', 1)->orderby('id', 'DESC')->get(T_DIS_LIKES, 20);
+$get_history_videos = array();
+if (!empty($get)) {
+    foreach ($get as $key => $video_) {
+       $fetched_video = $db->where('id', $video_->video_id)->getOne(T_VIDEOS);
+       $fetched_video->like_id = $video_->id;
+       $get_history_videos[] = $fetched_video;
+    }
+}
+if (!empty($get_history_videos)) {
+    $len = count($get_history_videos);
+    foreach ($get_history_videos as $key => $video) {
+        $video = PT_GetVideoByID($video, 0, 0, 0);
+        $pt->last_video = false;
+        if ($key == $len - 1) {
+            $pt->last_video = true;
+        }
+        $final .= PT_LoadPage('subscriptions/list', array(
+            'ID' => $video->like_id,
+            'USER_DATA' => $video->owner,
+            'THUMBNAIL' => $video->thumbnail,
+            'URL' => $video->url,
+            'TITLE' => $video->title,
+            'DESC' => $video->markup_description,
+            'VIEWS' => $video->views,
+            'TIME' => $video->time_ago
+        ));
+    }
+}
+if (empty($final)) {
+	$final = $list;
+}
+$pt->videos      = $get_history_videos;
+$pt->page        = 'liked-videos';
+$pt->title       = $lang->liked_videos . ' | ' . $pt->config->title;
+$pt->description = $pt->config->description;
+$pt->keyword     = $pt->config->keyword;
+$pt->content     = PT_LoadPage('liked-videos/content', array(
+    'LIKED_LIST' => $final
+));

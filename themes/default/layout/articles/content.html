@@ -1,0 +1,78 @@
+<div class="content-shadow col-md-8 no-padding-right no-padding-left" style="margin-bottom: 20px;">
+   <div class="articles-content">
+   	<div class="subscriptions-list author-list articles-container">
+   		{{POSTS}}
+   	</div>
+   	<?php if ($pt->posts_count > 0) { ?>
+         <div class="watch-video-show-more desc" data-type="articles" onclick="PT_LoadPost('{{CATEGORY}}',this);">
+             {{LANG show_more}}
+         </div>
+   	<?php } ?>
+   </div>
+</div>
+<div class="col-md-4">
+   <div class="article-categories content-shadow">
+      <div class="width-100">
+         <form class="form search-articles-form" method="post" action="">
+            <div class="form-group content-shadow">
+               <input type="text" class="form-control" placeholder="{{LANG search_articles}}" name="q">
+               <button type="submit">
+                  <i class="fa fa-search"></i>
+               </button>
+            </div>
+         </form>
+      </div>
+      
+      <h4>{{LANG categories}}</h4>
+      <div class="row">
+         <ul>
+            <?php foreach ($pt->categories as $cat_id => $category): ?>
+               <?php if ($pt->category == $cat_id): ?>
+                  <li class="active">
+                     <a href="<?php echo PT_Link("articles/category/$cat_id") ?>">
+                        <span>
+                           <i class="fa fa-caret-right"></i> <?php echo $category; ?>
+                        </span>
+                     </a>
+                  </li>
+               <?php else: ?>
+                  <li>
+                     <a href="<?php echo PT_Link("articles/category/$cat_id") ?>">
+                        <span>
+                           <?php echo $category; ?>
+                        </span>
+                     </a>
+                  </li>
+               <?php endif; ?>
+               
+            <?php endforeach; ?>
+         </ul>
+         <div class="clear"></div>
+      </div>
+      <br>
+      <h4>{{LANG most_popular}}</h4>
+
+      <div>
+         {{POPULAR_POSTS}}
+         
+         <div class="clear"></div>
+      </div>
+   </div>  
+</div>
+
+
+<script>
+   jQuery(document).ready(function($) {
+      $('.search-articles-form').submit(function(event) {
+         var query = $(this).find('input').val();
+         if (!query){
+            $(this).find('input').addClass('danger-field-border');
+            return false;
+         }
+         else if(query.length > 50){
+            $(this).find('input').addClass('danger-field-border');
+            return false;
+         }
+      });
+   });
+</script>

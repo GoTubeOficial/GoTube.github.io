@@ -1,0 +1,32 @@
+<div class="main-comment-reply" data-id="{{ID}}" id="reply-{{ID}}">
+   <div class="user-avatar pull-left">
+      <img src="{{USER avatar}}" alt="{{USER name}}">
+   </div>
+   <?php if ($pt->is_reply_owner == true) { ?>
+   <div class="pull-right delete-comment" onclick="PT_DeleteReply('{{ID}}');"><i class="material-icons">delete</i></div>
+   <?php } ?>
+   <div class="user-name">
+      <a href="{{USER url}}">{{USER name}}</a>
+      <?php if ($pt->is_ro_verified == true): ?>
+         <i class="fa fa-check-circle fa-fw verified"></i>
+      <?php endif; ?>
+      <small>{{TIME}}</small>
+   </div>
+   <div class="user-comment">
+      <p class="reply-text">{{TEXT}}</p>
+      <div class="width-100 div-vote-comment">
+         <span class="pointer comms-reply" onclick="PT_Reply('{{COMM_ID}}','{{USER name}}','{{ID}}');"><small><i class="fa fa-fw fa-reply"></i> {{LANG reply}}</small></span>
+         &nbsp;
+         <span class="div-vote-comment-btn">
+            <span onclick="PT_LikeReplies(this,'up','{{ID}}');" data-reply-likes="{{ID}}">
+              <i class="material-icons {{LIKED}}">thumb_up</i> <span>{{LIKES}}</span>
+            </span>
+            &nbsp;
+            <span onclick="PT_LikeReplies(this,'down','{{ID}}');" data-reply-dislikes="{{ID}}">
+              <i class="material-icons {{DIS_LIKED}}">thumb_down</i> <span>{{DIS_LIKES}}</span>
+            </span>
+         </span>
+      </div>
+   </div>  
+   <div class="clear"></div>
+</div>

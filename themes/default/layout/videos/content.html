@@ -1,0 +1,18 @@
+<div class="content">
+   <div class="col-md-12">
+      <div class="upload-head">
+         <h4>{{TITLE}}</h4>
+         <hr>
+      </div>
+      <div class="videos-latest-list row">
+      	{{VIDEOS}}
+      </div>
+      <?php if ($pt->videos_count > 1) { ?>
+            <div class="watch-video-show-more desc load-more" data-type="{{TYPE}}" {{CATEGORY_ID}}>
+                {{LANG show_more}}
+            </div>
+      <?php } ?>
+      <div class="clear"></div>
+   </div>
+   <div class="clear"></div>
+</div>
